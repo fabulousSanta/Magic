@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Experience</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      text-align: center; 
+      padding: 40px; 
+      background-color: #2c3e50; 
+      color: white;
+      overflow-x: hidden;
+    }
+    #timer { 
+      font-size: 1.5rem; 
+      margin: 20px 0; 
+      font-family: monospace; 
+      background: rgba(255,255,255,0.1);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    #message { 
+      display: none; 
+      margin-top: 30px; 
+      font-size: 24px; 
+      font-weight: bold; 
+      color: #f1c40f; 
+    }
+    button { 
+      font-size: 18px; padding: 15px 30px; cursor: pointer; 
+      background: #e74c3c; color: white; border: none; 
+      border-radius: 50px; transition: 0.3s;
+    }
+    button:hover { background: #c0392b; transform: scale(1.05); }
+
+    /* Snowfall Styles */
+    .snowflake {
+      position: fixed; top: -10px; z-index: 9999;
+      user-select: none; cursor: default;
+      animation: fall linear infinite; color: white;
+    }
+    @keyframes fall {
+      to { transform: translateY(105vh); }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎄 სეკრეტ სანტას წერილი</h2>
+  <div id="timer">Loading timer...</div>
+  
+  <button onclick="startExperience()">▶️ გახსენი საიდუმლო შეტყობინება</button>
+
+  <audio id="music" loop>
+    <source src="https://raw.githubusercontent.com/LevanLiluashvili/Merry/main/Christmas.mp3" type="audio/mpeg">
+  </audio>
+
+  <div id="message">
+    🎊 გილოცააააააავ ვერიკოოოოოო! 🎊<br>
+    <p style="font-size: 16px; font-weight: normal;">გისურვებ ჯანმრთელობას, ბედნიერებასა და უამრავ წარმატებას. იმედია, ჩემი საჩუქარი მოგეწონება და არ შევმცდარვარ. ვფიქრობ, ჩემი ვინაობის გამოცნობა არ გაგიჭირდება. საუკეთესო სურვილებით, შენი სეკრეტ სანტა.</p>
+  </div>
+
+  <script>
+    // ⏰ SET YOUR TIMES HERE
+    const startTime = new Date("2026-01-13T14:05:00").getTime(); 
+    const endTime   = new Date("2026-01-31T14:15:00").getTime();
+
+    // 1. START COUNTDOWN AUTOMATICALLY ON PAGE LOAD
+    const timerInterval = setInterval(updateTimer, 1000);
+    updateTimer(); // Run once immediately
+
+    function updateTimer() {
+      const now = new Date().getTime();
+      const timerDiv = document.getElementById("timer");
+      
+      if (now < startTime) {
+        const dist = startTime - now;
+        
+        // გამოთვლა: დღეები, საათები, წუთები და წამები
+        const days = Math.floor(dist / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((dist % (1000 * 60)) / 1000);
+        
+        // ჩვენება ფორმატით: 0h 0m 0s (დღეებს მხოლოდ მაშინ ვაჩვენებთ თუ 0-ზე მეტია)
+        let displayTime = "";
+        if (days > 0) displayTime += days + "d ";
+        displayTime += hours + "h " + mins + "m " + secs + "s";
+        
+        timerDiv.innerHTML = `გაიხსნება: ${displayTime}`;
+      } else if (now >= startTime && now <= endTime) {
+        timerDiv.innerHTML = "✨ უკვე დროა გახსნა! ✨";
+        timerDiv.style.color = "#2ecc71";
+      } else {
+        timerDiv.innerHTML = "⌛ დასრულდა მილოცვა.";
+        clearInterval(timerInterval);
+      }
+    }
+
+    // 2. BUTTON ACTION
+    function startExperience() {
+      const now = new Date().getTime();
+      const audio = document.getElementById("music");
+      const messageDiv = document.getElementById("message");
+
+      if (now >= startTime && now <= endTime) {
+        audio.play();
+        messageDiv.style.display = "block";
+        createSnow(); // Start the snow animation
+      } else if (now < startTime) {
+        alert("სიურპრიზი მზად არ არის! თვალი ადევნე წამზომს.");
+      } else {
+        alert("შენ გამოტოვე მილოცვა!");
+      }
+    }
+
+    // 3. SNOW EFFECT LOGIC
+    function createSnow() {
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const snow = document.createElement("div");
+          snow.className = "snowflake";
+          snow.innerHTML = "❄";
+          snow.style.left = Math.random() * 100 + "vw";
+          snow.style.animationDuration = (Math.random() * 3 + 2) + "s";
+          snow.style.opacity = Math.random();
+          document.body.appendChild(snow);
+        }, i * 100);
+      }
+    }
+  </script>
+</body>
+</html>
+
+
